@@ -1,3 +1,41 @@
+export async function searchByName() {
+    try {
+        const name = document.querySelector('#compoundName').value;
+        const url = 'https://api.rsc.org/compounds/v1/filter/name';
+        const options = {
+            method: 'POST',
+            headers: {
+                apikey: 'VlvG7ppdHFFGAVqGM3AiTYFxNbb4kjnY',
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                name: `${name}`,
+            }),
+        };
+
+        const response = await fetch(url, options);
+        if (!response.ok) {
+            const err = await response.json();
+            throw {
+                status: response.status,
+                statusText: response.statusText,
+                errorMessage: err,
+            };
+        }
+
+        const data = await response.json();
+        console.log(data.queryId);
+        await searchByQueryId(data.queryId);
+        // console.log(chemId);
+        // const resultss = searchByChemspiderId(chemId.results[0]);
+        // console.log(resultss);
+        // return resultss;
+    } catch (err) {
+        console.error(err);
+    }
+}
+
 function searchByQueryId(queryId) {
     const url = `https://api.rsc.org/compounds/v1/filter/${queryId}/results?count=10`;
     const options = {
@@ -21,35 +59,29 @@ function searchByQueryId(queryId) {
             });
         })
         .then(data => {
-            console.log(data);
-            return data;
+            //console.log(data);
+            searchByChemspiderId(data.results[0]);
+
         })
         .catch(err => {
             console.error(err);
         });
 }
-
-
-export function searchByName() {
-    const name = document.querySelector('#compoundName').value;
-    const url = `https://api.rsc.org/compounds/v1/filter/name`;
+function searchByChemspiderId(chemId) {
+    const url = `https://api.rsc.org/compounds/v1/records/${chemId}/details?fields=Formula`;
     const options = {
-        method: "POST",
+        method: "GET",
         headers: {
             "apikey": "VlvG7ppdHFFGAVqGM3AiTYFxNbb4kjnY",
-            "Accept": "application/json",
-            "Content-Type": "application/json"
+            "Accept": "application/json"
         },
-        body: JSON.stringify({
-            "name": `${name}`
-        }),
     };
     fetch(url, options).then(
         response => {
             if (response.ok) {
-                return response.json();
+                return response.text();
             }
-            return response.json().then(err => {
+            return response.text().then(err => {
                 return Promise.reject({
                     status: response.status,
                     statusText: response.statusText,
@@ -58,14 +90,11 @@ export function searchByName() {
             });
         })
         .then(data => {
-            console.log(data.queryId);
-            searchByQueryId(data.queryId);
-            
-            return searchByQueryId(data.queryId);
+            console.log(data);
+            return data;
         })
         .catch(err => {
-            return console.error(err);
+            console.error(err);
         });
-    }
-    
+}
 
