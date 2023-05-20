@@ -7,6 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
     <link rel="stylesheet" href="style.css">
+    <script src="/jmol/jsmol/JSmol.min.js"></script>
+    <script src="/jmol/jsmol/js/Jmol2.js"></script>
+    <script>jmolInitializate("/jmol/jsmol");</script>
     <title>chemistry API</title>
 </head>
 
@@ -37,7 +40,9 @@
 
     <h1>Chemistry search</h1>
 
-
+    <script>
+        jmolApplet(400,"load 1a03.pdb","0");
+    </script>
     <script src="./main.js" type="module" async></script>
 </body>
 

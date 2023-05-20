@@ -28,7 +28,7 @@ export async function searchByName() {
         console.log(data.queryId);
         await searchByQueryId(data.queryId);
         // console.log(chemId);
-        // const resultss = searchByChemspiderId(chemId.results[0]);
+        // const resultss = searchFormuleByCsId(chemId.results[0]);
         // console.log(resultss);
         // return resultss;
     } catch (err) {
@@ -60,15 +60,24 @@ function searchByQueryId(queryId) {
         })
         .then(data => {
             //console.log(data);
-            searchByChemspiderId(data.results[0]);
+            let chemid = data.results[0]
+            searchImageByCsId(chemid);
+            searchNameByCsId(chemid);
+            searchFormuleByCsId(chemid);
+            searchAvMassByCsId(chemid);
+            searchMolWeightByCsId(chemid);
+            let selectorFormula = document.querySelector(".info");
+            selectorFormula.insertAdjacentHTML("beforeend", `<p> ChemId : ${chemid}</p>`);
+
 
         })
         .catch(err => {
             console.error(err);
         });
 }
-function searchByChemspiderId(chemId) {
-    const url = `https://api.rsc.org/compounds/v1/records/${chemId}/details?fields=Formula`;
+
+function searchImageByCsId(chemId) {
+    const url = `https://api.rsc.org/compounds/v1/records/${chemId}/image`;
     const options = {
         method: "GET",
         headers: {
@@ -79,9 +88,42 @@ function searchByChemspiderId(chemId) {
     fetch(url, options).then(
         response => {
             if (response.ok) {
-                return response.text();
+                return response.json();
             }
-            return response.text().then(err => {
+            return response.json().then(err => {
+                return Promise.reject({
+                    status: response.status,
+                    statusText: response.statusText,
+                    errorMessage: err,
+                });
+            });
+        })
+        .then(data => {
+            console.log(data.image);
+            const selectorImage = document.querySelector(".image2d");
+            selectorImage.innerHTML = `<img src="data:image/png;base64,${data.image}" alt="imagen 2D compuesto" width="auto"/>`;
+
+        })
+        .catch(err => {
+            console.error(err);
+        });
+}
+
+function searchNameByCsId(chemId) {
+    const url = `https://api.rsc.org/compounds/v1/records/${chemId}/details?fields=CommonName`;
+    const options = {
+        method: "GET",
+        headers: {
+            "apikey": "VlvG7ppdHFFGAVqGM3AiTYFxNbb4kjnY",
+            "Accept": "application/json"
+        },
+    };
+    fetch(url, options).then(
+        response => {
+            if (response.ok) {
+                return response.json();
+            }
+            return response.json().then(err => {
                 return Promise.reject({
                     status: response.status,
                     statusText: response.statusText,
@@ -91,10 +133,110 @@ function searchByChemspiderId(chemId) {
         })
         .then(data => {
             console.log(data);
-            return data;
+            let commonName = data.commonName;
+            let selectorName = document.querySelector(".info");
+            selectorName.insertAdjacentHTML("beforeend", `<h2>${commonName}</h2>`);
+
+        })
+        .catch(err => {
+            console.error(err);
+        });
+}
+function searchFormuleByCsId(chemId) {
+    const url = `https://api.rsc.org/compounds/v1/records/${chemId}/details?fields=Formula`;
+    // `https://api.rsc.org/compounds/v1/records/${chemId}/details?fields=AverageMass&fields=StdInChIKey`;
+    const options = {
+        method: "GET",
+        headers: {
+            "apikey": "VlvG7ppdHFFGAVqGM3AiTYFxNbb4kjnY",
+            "Accept": "application/json"
+        },
+    };
+    fetch(url, options).then(
+        response => {
+            if (response.ok) {
+                return response.json();
+            }
+            return response.json().then(err => {
+                return Promise.reject({
+                    status: response.status,
+                    statusText: response.statusText,
+                    errorMessage: err,
+                });
+            });
+        })
+        .then(data => {
+            console.log(data);
+            let formula = data.formula;
+            let selectorFormula = document.querySelector(".info");
+            selectorFormula.insertAdjacentHTML("beforeend", `<h3>Formula: ${formula}</h3>`);
+        })
+        .catch(err => {
+            console.error(err);
+        });
+}
+function searchAvMassByCsId(chemId) {
+    const url = `https://api.rsc.org/compounds/v1/records/${chemId}/details?fields=AverageMass`;
+    const options = {
+        method: "GET",
+        headers: {
+            "apikey": "VlvG7ppdHFFGAVqGM3AiTYFxNbb4kjnY",
+            "Accept": "application/json"
+        },
+    };
+    fetch(url, options).then(
+        response => {
+            if (response.ok) {
+                return response.json();
+            }
+            return response.json().then(err => {
+                return Promise.reject({
+                    status: response.status,
+                    statusText: response.statusText,
+                    errorMessage: err,
+                });
+            });
+        })
+        .then(data => {
+            console.log(data);
+            let avMass = data.averageMass;
+            let selectorFormula = document.querySelector(".info");
+            selectorFormula.insertAdjacentHTML("beforeend", `<p> Average Mass : ${avMass}</p>`);
         })
         .catch(err => {
             console.error(err);
         });
 }
 
+function searchMolWeightByCsId(chemId) {
+    const url = `https://api.rsc.org/compounds/v1/records/${chemId}/details?fields=MolecularWeight`;
+    const options = {
+        method: "GET",
+        headers: {
+            "apikey": "VlvG7ppdHFFGAVqGM3AiTYFxNbb4kjnY",
+            "Accept": "application/json"
+        },
+    };
+    fetch(url, options).then(
+        response => {
+            if (response.ok) {
+                return response.json();
+            }
+            return response.json().then(err => {
+                return Promise.reject({
+                    status: response.status,
+                    statusText: response.statusText,
+                    errorMessage: err,
+                });
+            });
+        })
+        .then(data => {
+            console.log(data);
+            let molecularWeight = data.molecularWeight;
+            let selectorFormula = document.querySelector(".info");
+            selectorFormula.insertAdjacentHTML("beforeend", `<p> Molecular Weight : ${molecularWeight}</p>`);
+        })
+        .catch(err => {
+            console.error(err);
+        });
+}
