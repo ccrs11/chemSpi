@@ -1,20 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <link rel="stylesheet" href="style.css">
     <title>chemistry API</title>
 </head>
+
 <body>
+    <div class="grid-container">
+        <div class="search">
+            <!-- <form action=""> -->
+                <!-- <label for="compoundName">Insert the compound name: </label>  -->
+                <input type="text" name="compoundName" id="compoundName" placeholder="What are you looking for?" >
+                <button type="submit" id="searchButton">
+                    <i class="fa fa-search"></i>
+                </button>
+                <!-- <input type="submit" value="Search" id="searchButton"> -->
+            <!-- </form> -->
+        
+        </div>
+        <div class="image2d">
+        </div>
+        <div class="info">
+        </div>
+        <div class="image3d">
+        </div>
+        <div class="moreDetails">
+        </div>
+        <div class="externalReferences">
+        </div>
+    </div>
+
     <h1>Chemistry search</h1>
-    <form action="">
-        <label for="compoundName">Insert the compound name: </label>
-        <input type="text" name="compoundName" id="compoundName">
-        <input type="submit" value="Search" id="searchButton">
-    </form>
 
 
     <script src="./main.js" type="module" async></script>
 </body>
+
 </html>
