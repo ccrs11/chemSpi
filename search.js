@@ -5,7 +5,7 @@ export async function searchByName() {
         const options = {
             method: 'POST',
             headers: {
-                apikey: 'VlvG7ppdHFFGAVqGM3AiTYFxNbb4kjnY',
+                apikey: 'NMqJM4CgsoOPGYZmBihS1rdjXCALSffn',
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
             },
@@ -41,7 +41,7 @@ function searchByQueryId(queryId) {
     const options = {
         method: "GET",
         headers: {
-            "apikey": "VlvG7ppdHFFGAVqGM3AiTYFxNbb4kjnY",
+            "apikey": "NMqJM4CgsoOPGYZmBihS1rdjXCALSffn",
             "Accept": "application/json"
         },
     };
@@ -66,6 +66,7 @@ function searchByQueryId(queryId) {
             searchFormuleByCsId(chemid);
             searchAvMassByCsId(chemid);
             searchMolWeightByCsId(chemid);
+            searchmol3d(chemid);
             let selectorFormula = document.querySelector(".info");
             selectorFormula.insertAdjacentHTML("beforeend", `<p> ChemId : ${chemid}</p>`);
 
@@ -81,7 +82,7 @@ function searchImageByCsId(chemId) {
     const options = {
         method: "GET",
         headers: {
-            "apikey": "VlvG7ppdHFFGAVqGM3AiTYFxNbb4kjnY",
+            "apikey": "NMqJM4CgsoOPGYZmBihS1rdjXCALSffn",
             "Accept": "application/json"
         },
     };
@@ -114,7 +115,7 @@ function searchNameByCsId(chemId) {
     const options = {
         method: "GET",
         headers: {
-            "apikey": "VlvG7ppdHFFGAVqGM3AiTYFxNbb4kjnY",
+            "apikey": "NMqJM4CgsoOPGYZmBihS1rdjXCALSffn",
             "Accept": "application/json"
         },
     };
@@ -148,7 +149,7 @@ function searchFormuleByCsId(chemId) {
     const options = {
         method: "GET",
         headers: {
-            "apikey": "VlvG7ppdHFFGAVqGM3AiTYFxNbb4kjnY",
+            "apikey": "NMqJM4CgsoOPGYZmBihS1rdjXCALSffn",
             "Accept": "application/json"
         },
     };
@@ -180,7 +181,7 @@ function searchAvMassByCsId(chemId) {
     const options = {
         method: "GET",
         headers: {
-            "apikey": "VlvG7ppdHFFGAVqGM3AiTYFxNbb4kjnY",
+            "apikey": "NMqJM4CgsoOPGYZmBihS1rdjXCALSffn",
             "Accept": "application/json"
         },
     };
@@ -213,7 +214,7 @@ function searchMolWeightByCsId(chemId) {
     const options = {
         method: "GET",
         headers: {
-            "apikey": "VlvG7ppdHFFGAVqGM3AiTYFxNbb4kjnY",
+            "apikey": "NMqJM4CgsoOPGYZmBihS1rdjXCALSffn",
             "Accept": "application/json"
         },
     };
@@ -235,6 +236,41 @@ function searchMolWeightByCsId(chemId) {
             let molecularWeight = data.molecularWeight;
             let selectorFormula = document.querySelector(".info");
             selectorFormula.insertAdjacentHTML("beforeend", `<p> Molecular Weight : ${molecularWeight}</p>`);
+        })
+        .catch(err => {
+            console.error(err);
+        });
+}
+
+function searchmol3d(chemId) {
+    const url = `https://api.rsc.org/compounds/v1/records/${chemId}/details?fields=Mol3D`;
+    const options = {
+        method: "GET",
+        headers: {
+            "apikey": "NMqJM4CgsoOPGYZmBihS1rdjXCALSffn",
+            "Accept": "application/json"
+        },
+    };
+    fetch(url, options).then(
+        response => {
+            if (response.ok) {
+                return response.json();
+            }
+            return response.json().then(err => {
+                return Promise.reject({
+                    status: response.status,
+                    statusText: response.statusText,
+                    errorMessage: err,
+                });
+            });
+        })
+        .then(data => {
+            console.log(data.mol3D);
+            const selectorImage3d = document.querySelector(".image3d");
+            let res=jmolAppletInline(400,`${data.mol3D}`);
+            console.log(res._code);
+            selectorImage3d.innerHTML=res._code;
+
         })
         .catch(err => {
             console.error(err);
